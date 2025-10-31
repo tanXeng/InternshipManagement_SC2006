@@ -1,4 +1,7 @@
-package java.model;
+package java.model.user;
+
+import java.model.User;
+import java.model.internship.InternshipApplication;
 
 public class Student extends User {
     private int YearOfStudy;

@@ -1,9 +1,9 @@
 package java.model;
 
 public abstract class User {
-    private int userID;
-    private String name;
-    private String passwordHash;
+    protected int userID;
+    protected String name;
+    protected String passwordHash;
 
     public User(int userID, String name, String passwordHash) {
         this.userID = userID;
