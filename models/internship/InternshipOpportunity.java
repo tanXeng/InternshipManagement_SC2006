@@ -12,6 +12,7 @@ public class InternshipOpportunity {
     private String companyName;
     private CompanyRepresentative[] companyRepresentatives;
     private int numberOfSlots;
+
     private String status = "PENDING";
 
     public InternshipOpportunity(
@@ -24,6 +25,20 @@ public class InternshipOpportunity {
             String companyName,
             int numberOfSlots
     ) {
+		if (internshipTitle == null
+				|| description == null
+				|| internshipLevel == null
+				|| preferredMajors == null
+				|| applicationOpeningDate == null
+				|| applicationClosingDate == null
+				|| companyName == null
+				|| numberOfSlots == null
+		) {
+			throw new IllegalArgumentException("Fields cannot be null");
+		} else if (numberOfSlots < 1 || 10 < numberOfSlots) {
+			throw new IllegalArgumentException("Number of slots must be between 1 and 10 inclusive");
+		}
+
         this.internshipTitle = internshipTitle;
         this.description = description;
         this.internshipLevel = internshipLevel;
