@@ -1,4 +1,5 @@
 package cli;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 import controller.*;
@@ -11,40 +12,30 @@ import java.util.List;
 
 public class CLI {
     private Scanner sc = new Scanner(System.in);
-    private RepMenu repMenu;
-    private StaffMenu staffMenu;
-    private StudentMenu studentMenu;
-    private UserController userController;
-    private AuthManager authManager;
+	private UserController userController;
 
-    public CLI(UserController userController, AuthManager authManager) {
-        this.userController = userController;
-        this.authManager = authManager;
-        this.studentMenu = new StudentMenu(authManager);
-        this.staffMenu = new StaffMenu(authManager);
-        this.repMenu = new RepMenu(authManager);
+    public CLI(Database db) {
+        this.userController = new UserController(db);
     }
 
-    public void start() {
+    public void main() {
         int choice;
         int userID;
         String userIDString;
         String name;
         String password;
         User user = null;
-        List<InternshipApplication> emptyApplications = new ArrayList<>();
-        System.out.println();
-        System.out.println("=".repeat(20));
-        System.out.println();
-        System.out.println("1) Login");
-        System.out.println("2) Create a new account");
-        choice = inputInt("Select an option: ");
 
         boolean loop = true;
         System.out.println("To exit or logout of the program at any time, press ENTER");
         do {
-            user = authManager.getCurrentUser();
             if (user == null) {
+				System.out.println();
+				System.out.println("=".repeat(20));
+				System.out.println();
+				System.out.println("1) Login");
+				System.out.println("2) Create a new account");
+				choice = inputInt("Select an option: ");
                 switch (choice) {
                     // login
                     case 1:
@@ -54,11 +45,14 @@ public class CLI {
                         name = inputString("Enter your name: ");
                         password = inputString("Enter your password: ");
 
-                        user = authManager.login(name, password);
+						user = userController.login(name, password);  // Returns null if cannot login
 
                         if (user == null) {
                             System.out.println("Account not found!");
-                        }
+                        } else {
+							System.out.println("Logged in as " + user.getName());
+						}
+
                         break;
 
                     // create new account
@@ -77,14 +71,15 @@ public class CLI {
                                 System.out.println();
                                 System.out.println("=".repeat(20));
                                 System.out.println();
+
                                 userIDString = inputString("Enter your student ID: ");
                                 userID = Integer.parseInt(userIDString.substring(1, userIDString.length() - 1));
                                 name = inputString("Enter your name: ");
                                 password = inputString("Enter your password: ");
-                                String major = inputString("Enter your major: ");
                                 int yearOfStudy = inputInt("Enter your year: ");
-                                Student s = new Student(userID, name, AuthManager.hash(password), yearOfStudy, major, emptyApplications);
-                                userController.createStudentAccount(s);
+                                String major = inputString("Enter your major: ");
+                                Student s = new Student(userID, name, password, yearOfStudy, major);
+                                userController.createStudent(s);
                                 break;
                             case 2:
                                 System.out.println("Not implemented");
@@ -101,14 +96,13 @@ public class CLI {
             } else if (user instanceof Student) {
                 // render Student Menu
                 Student student = (Student)user;
-                studentMenu.runMenu(student);
-
+                user = StudentMenu.runMenu(student);
             } else if (user instanceof CompanyRepresentative) {
                 CompanyRepresentative rep = (CompanyRepresentative)user;
                 switch (rep.getStatus()) {
                     case Status.APPROVED:
                         // render the CompanyRepresentative menu if his application was accepted
-                        repMenu.runMenu(rep);
+                        user = RepMenu.runMenu(rep);
                         break;
                     case Status.PENDING:
                         System.out.println("Your application is pending");
@@ -124,7 +118,7 @@ public class CLI {
             } else if (user instanceof CareerCenterStaff) {
                 // render CareerCenterStaff Menu
                 CareerCenterStaff staff = (CareerCenterStaff)user;
-                staffMenu.runMenu(staff);
+                user = StaffMenu.runMenu(staff);
 
             } else {
                 System.out.println("Not implemented");
@@ -143,6 +137,7 @@ public class CLI {
 		}
 		return s;
 	}
+
     private int inputInt(String text) {
         System.out.println(text);
         int n = sc.nextInt();

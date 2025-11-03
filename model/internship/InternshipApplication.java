@@ -1,4 +1,5 @@
 package model.internship;
+
 import model.*;
 import model.user.*;
 

@@ -1,8 +1,8 @@
 package model.internship;
+
 import model.*;
 import model.user.CompanyRepresentative;
 import java.time.LocalDate;
-// import java.util.Arrays;
 import java.util.List;     
 import java.util.ArrayList;
 

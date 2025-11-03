@@ -1,4 +1,5 @@
 package model.user;
+
 import model.User;
 import model.Status;
 

@@ -1,4 +1,5 @@
 package controller;
+
 import model.internship.*;
 import model.user.*;
 import java.util.ArrayList;
@@ -6,7 +7,6 @@ import java.util.List;
 
 public class ApplicationController {
     private ArrayList<InternshipApplication> internshipApplications;
-    private ArrayList<RepresentativeApplication> RepresentativeApplications;
     private InternshipController internshipController;
     private UserController userController;
 

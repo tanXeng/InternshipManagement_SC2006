@@ -2,18 +2,13 @@ package cli;
 
 import java.util.Scanner;
 
-import controller.AuthManager;
+import model.User;
 import model.user.CareerCenterStaff;
 
 public class StaffMenu {
-    private Scanner sc = new Scanner(System.in);
-    private AuthManager authManager;
+    private static Scanner sc = new Scanner(System.in);
 
-    public StaffMenu(AuthManager authManager) {
-        this.authManager = authManager;
-    }
-
-    public void runMenu(CareerCenterStaff staff) {
+    public static User runMenu(CareerCenterStaff staff) {
         int choice;
         System.out.println();
         System.out.println("=".repeat(20));
@@ -28,26 +23,25 @@ public class StaffMenu {
         switch (choice) {
             case 1:
                 System.out.println("Not implemented");
-                break;
+				return staff;
             case 2:
                 System.out.println("Not implemented");
-                break;
+				return staff;
             case 3:
                 System.out.println("Not implemented");
-                break;
+				return staff;
             case 4:
                 System.out.println("Not implemented");
-                break;      
+				return staff;
             case 5:
                 System.out.println("Logging out...");
-                authManager.logout();
-                break;
+				return null;
             default:
-                break;
+				return staff;
         }
     }
 
-    private String inputString(String text) {
+    private static String inputString(String text) {
         System.out.println(text);
         String s = sc.nextLine();
         if (s.isEmpty()) {
@@ -56,7 +50,7 @@ public class StaffMenu {
         return s;
     }
 
-    private int inputInt(String text) {
+    private static int inputInt(String text) {
         System.out.println(text);
         int n = sc.nextInt();
         sc.nextLine();

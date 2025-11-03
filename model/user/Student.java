@@ -3,19 +3,18 @@ package model.user;
 import model.User;
 import model.internship.InternshipApplication;
 import java.util.ArrayList; 
-import java.util.List;
 
 public class Student extends User {
     private int YearOfStudy;
     private String Major;
-    private List<InternshipApplication> internshipApplications;
+    private ArrayList<InternshipApplication> internshipApplications = new ArrayList<InternshipApplication>();
     public static final int MAX_APPLICATIONS = 3;
 
-    public Student(int userID, String name, String passwordHash, int YearOfStudy, String Major, List<InternshipApplication> internshipApplications) {
+    public Student(int userID, String name, String passwordHash, int YearOfStudy, String Major) {
         super(userID, name, passwordHash);
+
         this.YearOfStudy = YearOfStudy;
         this.Major = Major;
-        this.internshipApplications = new ArrayList<>(internshipApplications);
     }
 
     public int getYearOfStudy() {
@@ -34,7 +33,7 @@ public class Student extends User {
         Major = major;
     }
 
-    public List<InternshipApplication> getInternshipApplications() {
+    public ArrayList<InternshipApplication> getInternshipApplications() {
         return new ArrayList<>(internshipApplications);
     }
 

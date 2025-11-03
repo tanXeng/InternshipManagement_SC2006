@@ -2,18 +2,13 @@ package cli;
 
 import java.util.Scanner;
 
-import controller.AuthManager;
+import model.User;
 import model.user.CompanyRepresentative;
 
 public class RepMenu {
-    private Scanner sc = new Scanner(System.in);
-    private AuthManager authManager;
+    private static Scanner sc = new Scanner(System.in);
 
-    public RepMenu(AuthManager authManager) {
-        this.authManager = authManager;
-    }
-
-    public void runMenu(CompanyRepresentative rep) {
+    public static User runMenu(CompanyRepresentative rep) {
         int choice;
         System.out.println();
         System.out.println("=".repeat(20));
@@ -23,14 +18,13 @@ public class RepMenu {
         switch (choice) {
             case 1:
                 System.out.println("Logging out...");
-                authManager.logout();
-                break;
+				return null;
             default:
-                break;
+				return rep;
         }
     }
 
-    private String inputString(String text) {
+    private static String inputString(String text) {
         System.out.println(text);
         String s = sc.nextLine();
         if (s.isEmpty()) {
@@ -39,7 +33,7 @@ public class RepMenu {
         return s;
     }
 
-    private int inputInt(String text) {
+    private static int inputInt(String text) {
         System.out.println(text);
         int n = sc.nextInt();
         sc.nextLine();
