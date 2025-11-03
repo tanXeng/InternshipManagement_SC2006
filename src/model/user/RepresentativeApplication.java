@@ -1,4 +1,4 @@
-package java.model.user;
+package model.user;
 
 public class RepresentativeApplication {
     

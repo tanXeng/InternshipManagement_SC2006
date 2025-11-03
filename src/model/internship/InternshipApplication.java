@@ -1,6 +1,6 @@
-package java.model.internship;
-import java.model.*;
-import java.model.user.*;
+package model.internship;
+import model.*;
+import model.user.*;
 
 public class InternshipApplication extends Application {
     private InternshipOpportunity internshipOpportunity;

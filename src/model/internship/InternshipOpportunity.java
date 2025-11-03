@@ -1,8 +1,10 @@
-package java.model.internship;
-import java.model.*;
-import java.model.user.CompanyRepresentative;
+package model.internship;
+import model.*;
+import model.user.CompanyRepresentative;
 import java.time.LocalDate;
-import java.util.Arrays;
+// import java.util.Arrays;
+import java.util.List;     
+import java.util.ArrayList;
 
 public class InternshipOpportunity {
     private String internshipTitle;
@@ -11,16 +13,15 @@ public class InternshipOpportunity {
     private String preferredMajors;
     private LocalDate applicationOpeningDate;
     private LocalDate applicationClosingDate;
-    private InternshipOpportunityStatus status;
+    private Status status;
     private String companyName;
-    private CompanyRepresentative[] companyRepresentatives;
-    private int representativeCount;
+    private List<CompanyRepresentative> companyRepresentatives;    
     private int numberOfSlots;
     public static final int MAX_NUM_SLOTS = 10;
 
     public InternshipOpportunity(String internshipTitle, String description, InternshipLevel internshipLevel, 
                                  String preferredMajors, LocalDate applicationOpeningDate, LocalDate applicationClosingDate, 
-                                 String companyName, CompanyRepresentative[] companyRepresentatives, int numberOfSlots) {
+                                 String companyName, List<CompanyRepresentative> companyRepresentatives, int numberOfSlots) {
         
         // input validation
         if (applicationOpeningDate == null || applicationClosingDate == null || applicationClosingDate.isBefore(applicationOpeningDate)) {
@@ -39,18 +40,15 @@ public class InternshipOpportunity {
         this.applicationClosingDate = applicationClosingDate;
         this.companyName = companyName;
         this.numberOfSlots = numberOfSlots;
-        this.companyRepresentatives = companyRepresentatives;
-        this.representativeCount = 0;
-
-        // count the representatives 
-        for (CompanyRepresentative rep : this.companyRepresentatives) {
-            if (rep != null) {
-                this.representativeCount++;
-            }
+        
+        if (companyRepresentatives != null) {
+        this.companyRepresentatives = new ArrayList<>(companyRepresentatives);
+        } else {
+            this.companyRepresentatives = new ArrayList<>();
         }
         
         // when first created, the status should be PENDING 
-        this.status = InternshipOpportunityStatus.PENDING; 
+        this.status = Status.PENDING; 
     }
     
     public String getInternshipTitle() {
@@ -101,11 +99,11 @@ public class InternshipOpportunity {
         this.applicationClosingDate = applicationClosingDate;
     }
 
-    public InternshipOpportunityStatus getStatus() {
+    public Status getStatus() {
         return this.status;
     }
     
-    public void setStatus(InternshipOpportunityStatus status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
@@ -117,73 +115,41 @@ public class InternshipOpportunity {
         this.companyName = companyName;
     }
 
-    public CompanyRepresentative[] getCompanyRepresentatives() {
-        
-        // return a copy of the active representatives (up to representativeCount)
-        return Arrays.copyOf(this.companyRepresentatives, this.representativeCount);
+    public List<CompanyRepresentative> getCompanyRepresentatives() { 
+        return new ArrayList<>(this.companyRepresentatives); 
     }
 
-    public int addCompanyRepresentative(CompanyRepresentative repToAdd) {
+public int addCompanyRepresentative(CompanyRepresentative repToAdd) {
     if (repToAdd == null) {
         // FAILURE!!!
         return 1;
     }
 
-    // check for duplicates 
-    for (int i = 0; i < this.representativeCount; i++) {
-        // requires CompanyRepresentative to have a valid equals() method
-        if (this.companyRepresentatives[i].equals(repToAdd)) {
-
-            // FAILURE!!!
-            return 1; 
-        }
+    // Check for duplicates using the List's built-in method
+    if (this.companyRepresentatives.contains(repToAdd)) {
+        // FAILURE!!!
+        return 1; 
     }
-
-    // check if resizing is necessary
-    if (this.representativeCount == this.companyRepresentatives.length) {
-        // resize the array: create a new array 50% larger
-        int newSize = this.companyRepresentatives.length == 0 ? 1 : this.companyRepresentatives.length + (this.companyRepresentatives.length / 2);
-        this.companyRepresentatives = Arrays.copyOf(this.companyRepresentatives, newSize);
-    }
-    this.companyRepresentatives[this.representativeCount] = repToAdd;
-    this.representativeCount++;
+    this.companyRepresentatives.add(repToAdd);
     
     // success
     return 0;
     }
 
     public int deleteCompanyRepresentative(CompanyRepresentative repToDelete) {
-        if (repToDelete == null || this.representativeCount == 0) {
+        if (repToDelete == null) {
             // FAILURE!!!
             return 1;
         }
+        boolean removed = this.companyRepresentatives.remove(repToDelete);
 
-        int indexToDelete = -1;
-
-        // find the index of the representative to delete
-        for (int i = 0; i < this.representativeCount; i++) {
-            if (this.companyRepresentatives[i].equals(repToDelete)) {
-                indexToDelete = i;
-                break;
-            }
+        if (removed) {
+            // success
+            return 0;
+        } else {
+            // FAILURE!!! 
+            return 1; 
         }
-
-        if (indexToDelete == -1) {
-            // FAILURE!!!
-            return 1; // representative not found
-        }
-
-        // shift all subsequent elements one position to the left
-        for (int i = indexToDelete; i < this.representativeCount - 1; i++) {
-            this.companyRepresentatives[i] = this.companyRepresentatives[i + 1];
-        }
-
-        // clear the last occupied slot and update the count
-        this.companyRepresentatives[this.representativeCount - 1] = null;
-        this.representativeCount--;
-
-        // success
-        return 0;
     }
     
     public int getNumberOfSlots() {
